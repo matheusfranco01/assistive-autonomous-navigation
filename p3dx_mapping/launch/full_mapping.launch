@@ -1,0 +1,30 @@
+<launch>
+  <!-- Mundo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="/home/rodolfo/catkin_ws/src/p3dx_mapping/worlds/room.world"/>
+  </include>
+
+  <!-- Robô -->
+  <include file="$(find p3dx_gazebo)/launch/p3dx.launch">
+    <arg name="ns" value="p3dx"/>
+    <arg name="x" value="0"/>
+    <arg name="y" value="0"/>
+    <arg name="z" value="0"/>
+  </include>
+
+  <!-- Hector + Octomap -->
+  <!-- <include file="$(find p3dx_mapping)/launch/octomap_hector.launch"/> -->
+
+  <!-- RTAB-Map -->
+  <include file="$(find p3dx_mapping)/launch/rtabmap_mapping.launch"/>
+
+  <!-- Teleop -->
+  <node pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        name="teleop"
+        output="screen"
+        launch-prefix="xterm -e">
+    <remap from="cmd_vel" to="/p3dx/cmd_vel"/>
+  </node>
+
+</launch>

@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <remap from="scan" to="/p3dx/laser/scan"/>
+    <param name="odom_frame"  value="p3dx_tf/odom"/>
+    <param name="base_frame"  value="p3dx_tf/base_link"/>
+    <param name="map_frame"   value="map"/>
+  </node>
+
+  <node pkg="rviz" type="rviz" name="rviz"/>
+</launch>

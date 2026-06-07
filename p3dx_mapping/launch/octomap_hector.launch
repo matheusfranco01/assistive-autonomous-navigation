@@ -1,0 +1,22 @@
+<launch>
+  <!-- GMMapping para mapa 2D com laser + odometria -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <remap from="scan" to="/p3dx/laser/scan"/>
+    <param name="odom_frame"  value="p3dx_tf/odom"/>
+    <param name="base_frame"  value="p3dx_tf/base_link"/>
+    <param name="map_frame"   value="map"/>
+  </node>
+
+  <!-- Octomap para mapa 3D com câmera -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+    <param name="resolution"             value="0.05"/>
+    <param name="frame_id"               type="string" value="map"/>
+    <param name="sensor_model/max_range" value="3.0"/>
+    <param name="pointcloud_min_z"       value="0.1"/>
+    <param name="pointcloud_max_z"       value="0.8"/>
+    <remap from="cloud_in" to="/p3dx/camera/depth/points"/>
+  </node>
+
+  <!-- RViz -->
+  <node pkg="rviz" type="rviz" name="rviz"/>
+</launch>
