@@ -1,0 +1,15 @@
+obstacle_range: 3.0
+raytrace_range: 3.5
+
+footprint: [[0.25,0.20],[0.25,-0.20],[-0.25,-0.20],[-0.25,0.20]]
+
+inflation_radius: 0.55
+
+observation_sources: laser_scan_sensor
+
+laser_scan_sensor:
+  sensor_frame: p3dx_tf/lms100
+  data_type: LaserScan
+  topic: /p3dx/laser/scan
+  marking: true
+  clearing: true

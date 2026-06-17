@@ -3,6 +3,7 @@ import rospy
 from geometry_msgs.msg import Twist
 import cv2
 import mediapipe as mp
+from sensor_msgs.msg import LaserScan
 
 mp_hands = mp.solutions.hands
 
@@ -10,6 +11,19 @@ mp_hands = mp.solutions.hands
 FINGER_TIPS = [8, 12, 16, 20]
 FINGER_PIPS = [6, 10, 14, 18]
 FINGER_NAMES = ["indicador", "medio", "anelar", "mindinho"]
+DIST_SEGURANCA = 0.5  # metros
+
+# Distancia minima frontal detectada pelo laser
+min_dist_frente = float('inf')
+
+def laser_callback(msg):
+    global min_dist_frente
+    total = len(msg.ranges)
+    centro = total // 2
+    janela = total // 12  # ~30 graus
+    raios = msg.ranges[centro - janela : centro + janela]
+    validos = [r for r in raios if r > 0.01 and r < msg.range_max]
+    min_dist_frente = min(validos) if validos else float('inf')
 
 def get_fingers_state(landmarks):
     """Retorna lista de booleanos: True = dedo esticado"""
@@ -37,10 +51,13 @@ def classify_gesture(fingers):
 def main():
     rospy.init_node('gesture_control')
     pub = rospy.Publisher('/p3dx/cmd_vel', Twist, queue_size=1)
-    rate = rospy.Rate(10)
+    rospy.Subscriber('/p3dx/laser/scan', LaserScan, laser_callback)
+    rate = rospy.Rate(20)
 
     hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
     cap = cv2.VideoCapture("http://host.docker.internal:5000/video")
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
     if not cap.isOpened():
         rospy.logerr("Nao foi possivel abrir o stream da webcam")
@@ -63,9 +80,15 @@ def main():
             lm = results.multi_hand_landmarks[0].landmark
             fingers = get_fingers_state(lm)
             gesto, linear, angular = classify_gesture(fingers)
-            twist.linear.x = linear
-            twist.angular.z = angular
-            rospy.loginfo_throttle(0.5, f"{gesto} | dedos: {fingers}")
+
+            if linear > 0 and min_dist_frente < DIST_SEGURANCA:
+                twist.linear.x = 0.0
+                twist.angular.z = 0.0
+                rospy.logwarn_throttle(0.5, f"OBSTACULO DETECTADO ({min_dist_frente:.2f}m) - BLOQUEANDO")
+            else:
+                twist.linear.x = linear
+                twist.angular.z = angular
+                rospy.loginfo_throttle(0.5, f"{gesto} | dedos: {fingers}")
         else:
             twist.linear.x = 0.0
             twist.angular.z = 0.0

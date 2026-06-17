@@ -1,0 +1,20 @@
+digraph G {
+"p3dx_tf/base_link" -> "p3dx_tf/front_sonar"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/odom" -> "p3dx_tf/base_link"[label="Broadcaster: /gazebo\nAverage rate: 100.021 Hz\nMost recent transform: 1269.109 ( 0.011 sec old)\nBuffer length: 4.739 sec\n"];
+"p3dx_tf/p3dx_left_wheel" -> "p3dx_tf/p3dx_left_hubcap"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/p3dx_left_wheel"[label="Broadcaster: /gazebo\nAverage rate: 100.950 Hz\nMost recent transform: 1269.109 ( 0.011 sec old)\nBuffer length: 4.735 sec\n"];
+"p3dx_tf/p3dx_right_wheel" -> "p3dx_tf/p3dx_right_hubcap"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/p3dx_right_wheel"[label="Broadcaster: /gazebo\nAverage rate: 100.950 Hz\nMost recent transform: 1269.109 ( 0.011 sec old)\nBuffer length: 4.735 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/swivel"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/top_plate"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/camera_link"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/camera_link" -> "p3dx_tf/camera_optical_frame"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/center_wheel" -> "p3dx_tf/center_hubcap"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/swivel" -> "p3dx_tf/center_wheel"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"p3dx_tf/base_link" -> "p3dx_tf/lms100"[label="Broadcaster: /p3dx/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1269.120 sec old)\nBuffer length: 0.000 sec\n"];
+"map" -> "p3dx_tf/odom"[label="Broadcaster: /rtabmap\nAverage rate: 49.411 Hz\nMost recent transform: 1269.182 ( -0.062 sec old)\nBuffer length: 4.756 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1269.120"[ shape=plaintext ] ;
+ }->"map";
+}

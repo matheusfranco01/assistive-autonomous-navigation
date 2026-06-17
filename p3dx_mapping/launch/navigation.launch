@@ -1,0 +1,58 @@
+<launch>
+    <param name="use_sim_time" value="true"/>
+
+    <!-- Gazebo + P3DX (sem RTAB-Map) -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find p3dx_mapping)/worlds/room.world"/>
+    </include>
+
+    <include file="$(find p3dx_gazebo)/launch/p3dx.launch">
+        <arg name="ns" value="p3dx"/>
+        <arg name="x" value="0"/>
+        <arg name="y" value="0"/>
+        <arg name="z" value="0"/>
+    </include>
+
+    <!-- Mapa salvo -->
+    <node pkg="map_server"
+          type="map_server"
+          name="map_server"
+          args="$(find p3dx_mapping)/maps/mapa_p3dx.yaml"/>
+
+    <!-- AMCL -->
+    <node pkg="amcl"
+          type="amcl"
+          name="amcl">
+        <rosparam file="$(find p3dx_mapping)/config/amcl_params.yaml"
+                  command="load"/>
+        <remap from="scan" to="/p3dx/laser/scan"/>
+        <param name="use_map_topic" value="false"/>
+        <param name="first_map_only" value="true"/>
+    </node>
+
+    <!-- Move Base -->
+    <node pkg="move_base"
+          type="move_base"
+          name="move_base"
+          output="screen">
+        <remap from="cmd_vel" to="/p3dx/cmd_vel"/>
+        <rosparam file="$(find p3dx_mapping)/config/costmap_common.yaml"
+                  command="load"
+                  ns="global_costmap"/>
+        <rosparam file="$(find p3dx_mapping)/config/costmap_common.yaml"
+                  command="load"
+                  ns="local_costmap"/>
+        <rosparam file="$(find p3dx_mapping)/config/global_costmap.yaml"
+                  command="load"/>
+        <rosparam file="$(find p3dx_mapping)/config/local_costmap.yaml"
+                  command="load"/>
+        <rosparam file="$(find p3dx_mapping)/config/dwa_local_planner.yaml"
+                  command="load"/>
+    </node>
+
+    <!-- RViz -->
+    <node pkg="rviz"
+          type="rviz"
+          name="rviz"/>
+
+</launch>
