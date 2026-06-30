@@ -1,7 +1,7 @@
 <launch>
   <!-- Mundo -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="/home/rodolfo/catkin_ws/src/p3dx_mapping/worlds/room.world"/>
+    <arg name="world_name" value="$(find p3dx_mapping)/worlds/room.world"/>
   </include>
 
   <!-- Robô -->
